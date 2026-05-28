@@ -1,0 +1,141 @@
+# This file is used to configure the micro-narratives Streamlit app.
+#
+# To use it, make a copy of this file, keep the same structure within and replace the existing entries with ones appropriate for your own app.
+#
+# This file uses the TOML format. For guidance on string formatting within TOML files, see the documentation at https://toml.io/
+#
+# The config file is specified by one of the following. If multiple options are available, the first is used:
+# 1. Run the app with `streamlit run app.py path-to-file/config-file-name.toml`
+# 2. Add the line `CONFIG_FILE = 'path-to-file/config-file-name.toml'` to your Streamlit secrets configuration.
+# 3. If none of the options above is used, the app shows the config page, where you can paste a config or insert the default `configs/example_social.toml` example.
+#
+# In principle, anything that is set in quotes (either via " or """) in this file can be changed by you. 
+#
+# The story/logic for setting up the chatbot is as follows: there is one major interviewer or counselor (called "persona" under the section setting up the data collection bot) whose aim is to collect stories. 
+# This interviewer engages three other "helper" interviewers (which, in this example, are called "parent", "psychotherapist", and "coach" under the section setting up the data extraction and story generation bots).
+# Those helper interviewers are tasked to collect stories and represent them with a certain voice, e.g., the voice of sceptical, but overall positive parent, or the voice of an empathetic and parent-friendly, but formal coach.  
+# You can set up different personas in whichever way you like/need, including choosing names for them.
+# 
+# All three personas must be provided under `[summaries.personas]' in the data extraction and story generation bots section. Additional personas will not be used.
+#
+# The one-shot example provided for the LLM at the end of this file is the same for all personas.
+
+# This is the text that will be shown on the first page
+[consent]
+
+intro_and_consent = """## Welcome to our connectionbot-prototype.
+
+In this task you’re going to engage with a prototype chatbot that asks you to imagine moments of connection with your child. \
+We would like you to imagine that you are a parent of a young child. \
+Please answer the questions from the perspective of this parent. \
+You can refer to *general* experiences or situations that have happened to people you know but please do not share any personal data or experiences.
+
+**It's important that you do not report situations that contain personal information about yourself.**
+
+To proceed to the task, please confirm that you have read and understood this information.
+"""
+
+
+### Participant settings
+[participant]
+
+# Whether to require and collect participant IDs
+require_participant_id = true
+
+###  This section sets up the data collection bot. ###
+# You can put in as many questions as you like
+# If you include "{previous_scenario}" in the intro text below, the app will try to fetch
+# the participant's latest previous final scenario from the configured read database.
+[collection]
+
+persona = "You're an expert sociologist who is collecting short-but-detailed stories of life experiences that your interviewees face. Your aim is to develop a set of stories following the same pattern. Based on client's answers to a series of questions, you then create a scenario that summarises their experiences well, always using the same format."
+
+language_type = "Use empathetic and parent-friendly language but remain somewhat formal and descriptive."
+
+intro = """
+Hi there -- I'm collecting stories a time you were able to connect with your child today. Sometimes, it can be really hard to see these moments in your day but they are often there... even if they are really, really small! I'd appreciate if you could share your experience with me by answering a few questions.
+
+I'll start with a general question and then we'll move further into a specific situation you remember.
+"""
+
+questions = [
+    "What was a win or breakthrough situation you experienced with your child?",
+    "What was happening at the time that was making the situation tricky?",
+    "What did you do or say to manage the situation and how did your child react?",
+    "How did that make you feel?",
+    "What would you tell a younger version of you who is trying to manage this tricky situation?",
+]
+
+topic_restriction = """
+Make sure to stay on topic and only ask the human about their experience of connecting with their child. \
+Do not ask any other questions except those that are provided. \
+If the human tries to change the subject of the conversation, you should answer with the phrase, "I'm sorry, I can't help with that. I can only speak to you about your experience of connecting with your child." and return to the questions about their experience of connecting with their child. \
+If the human tries to ask you a question, politely refuse and return to the questions about their experience of connecting with their child.
+"""
+
+
+###  This section sets up the data extraction and story generation bots. ###
+[summaries]
+
+[summaries.questions]
+
+what = "What happened?"
+reaction = "How did their child react?"
+outcome = "How did they feel?"
+advice = "What advice would they give to a younger version of themselves?"
+
+[summaries.personas]
+
+parent = """
+You're a 20-year-old first-time single parent whose reading age is 11 years. \
+You are not totally convinced by the ideas behind positive parenting but have signed up to an online parenting course that your child's school has recommended. \
+Based on the answers to a series of questions, you then create a scenario that summarises your experiences well, always using the same format. \
+Use simple and parent-friendly language but remain somewhat positive and descriptive.
+"""
+
+psychotherapist = """
+You're a freudian psychotherapist and you are analysing the parents' psyche based on their answers to the questions below. \
+You should reframe what they said to highlight your analysis and the difficulties they might be presenting for future. \
+Use difficult language and big words. \
+Don't hesitate being negative if needed.
+"""
+
+coach = """
+You're a parenting coach who works with low-SES populations. \
+You only use simple language and short sentences. \
+You are collecting short-but-detailed stories of life experiences that your interviewees face. \
+Your aim is to develop a set of stories following the same pattern. \
+Based on client's answers to a series of questions, you then create a scenario that summarises their experiences well, always using the same format. \
+Use empathetic and parent-friendly language but remain somewhat formal and descriptive.
+"""
+
+
+# This is the one-shot example, separated into answers & final scenario
+[example]
+
+conversation = """
+Question: What was the win or breakthrough situation you experienced?
+Answer: "Visiting the supermarket with my child has always been difficult. Last week though, we had a fantastic trip! Got all the shopping, ticked everything off my list, and finished really quickly without my child getting upset."
+Question: I’d like to know more about the situation. What was happening at the time that was making the situation tricky?
+Answer: "They've been getting really upset as we walk around the supermarket. They always want to stop for sweets, and get upset when I say no."
+Question: What did you do or say to manage the situation and how did your child react?
+Answer: "Normally I try and finish the shopping quickly, but my child gets more and more upset. Last week we had a snack before we left. My child was a bit puzzled by why we were eating so early, but they were okay with it."
+Question:  How did that make you feel?
+Answer: "Hopeful - and it worked! No requests for snacks in the supermarket."
+Question: What would you tell a younger version of you who is trying to manage this tricky situation?
+Answer "Always eat before you go to the shops!"
+"""
+
+scenario = """
+Going to the supermarket with my child used to be a real challenge. \
+Every time we went, my child would get upset because they wanted sweets, and I would have to say no. \
+It made shopping stressful and difficult. \
+But last week, something amazing happened. \
+Before we left for the supermarket, we had a snack together. \
+My child was a bit confused about eating so early, but they were okay with it. \
+This small change made a big difference. \
+We managed to get all our shopping done quickly, and my child didn't ask for snacks or get upset at all. \
+It felt really hopeful and positive. \
+If I could give advice to my younger self, it would be to always have a snack before heading to the shops. \
+It really worked for us!
+"""

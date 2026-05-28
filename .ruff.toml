@@ -1,0 +1,6 @@
+target-version = "py312"
+
+[lint]
+
+# pycodestyle, Pyflakes, pyupgrade, flake8-bugbear, flake8-simplify, isort
+select = ["E", "F", "UP", "B", "SIM", "I"]

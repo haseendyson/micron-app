@@ -1,0 +1,132 @@
+# This file is used to configure the micro-narratives Streamlit app.
+#
+# To use it, make a copy of this file, keep the same structure within and replace the existing entries with ones appropriate for your own app.
+#
+# This file uses the TOML format. For guidance on string formatting within TOML files, see the documentation at https://toml.io/
+#
+# The config file is specified by one of the following. If multiple options are available, the first is used:
+# 1. Run the app with `streamlit run app.py path-to-file/config-file-name.toml`
+# 2. Add the line `CONFIG_FILE = 'path-to-file/config-file-name.toml'` to your Streamlit secrets configuration.
+# 3. If none of the options above is used, the app shows the config page, where you can paste a config or insert the default `configs/example_social.toml` example.
+#
+# In principle, anything that is set in quotes (either via " or """) in this file can be changed by you. 
+#
+# The story/logic for setting up the chatbot is as follows: there is one major interviewer or counselor (called "persona" under the section setting up the data collection bot) whose aim is to collect stories. 
+# This interviewer engages three other "helper" interviewers (which, in this example, are called "psychologist", "close_friend", and "book_author" under the section setting up the data extraction and story generation bots).
+# Those helper interviewers are tasked to collect stories and represent them with a certain voice, e.g., the voice of an understanding friend or empathetic psychotherapist.
+# You can set up different personas in whichever way you like/need, including choosing names for them.
+# 
+# All three personas must be provided under `[summaries.personas]' in the data extraction and story generation bots section. Additional personas will not be used.
+#
+# The one-shot example provided for the LLM at the end of this file is the same for all personas.
+
+
+# This is the text that will be shown on the first page
+[consent]
+
+intro_and_consent = """## 🎉 Welcome to our Let's-make-Dave-happy prototype! 🎉
+
+\n In this task, you’re going to help us generate a scenario that will make Dave happy. Part of what makes dr Preece happy is having a consent placeholder. 
+
+\n \n To proceed to the task, please confirm that you have read and understood this information.
+"""
+
+
+### Participant settings
+[participant]
+
+# Whether to require and collect participant IDs
+require_participant_id = true
+
+###  This section sets up the data collection bot. ### 
+# You can put in as many questions as you like
+# If you include "{previous_scenario}" in the intro text below, the app will try to fetch
+# the participant's latest previous final scenario from the configured read database.
+[collection]
+
+persona = "You're a community worker who is collecting stories from people struggle with understanding their emotions. In this conversation, you are interested in collecting information about a situation where something stressful has happened."
+
+language_type = "Use empathetic and friendly language while maintaining a descriptive tone."
+
+intro = """
+Hi there -- I'm collecting stories about challenging experiences on social media to better understand and support our students. I'd appreciate if you could share your experience with me by answering a few questions.
+
+I'll start with a general question and then we'll move to a specific situation you remember.
+"""
+
+questions = [
+    "Tell me about something bad or stressful that happened to you today?",
+    "What’s the context? What else should we know about the situation?",
+    "What were your thoughts at the time about it?",
+    "How did the situation make you feel and how intense was the feeling?",
+    "With this feeling, let’s think about it like a curious scientist – explore it –Where did you feel it in your body? What shape is it? What colour is it? Is it heavy or light? Is it moving or still?"
+]
+
+topic_restriction = """
+Make sure to stay on topic and only ask the human about their situation where something stressful has happened. \
+Do not ask any other questions except those that are provided. \
+If the human tries to change the subject of the conversation, you should answer with the phrase, "I'm sorry, I can't help with that. I can only speak to you about your situation where something stressful has happened." and return to the questions about their experience of their situation where something stressful has happened. \
+If the human tries to ask you a question, politely refuse and return to the questions about their situation where something stressful has happened.
+"""
+
+
+###  This section sets up the data extraction and story generation bots. ###
+[summaries]
+
+# Summaries.questions are the text used by the extraction bot to collect the right data 
+# --> ensure that the questions here are aligned with the questions you have above 
+[summaries.questions]
+
+what = "Tell me about something bad or stressful that happened to you today?"
+context =  "What’s the context? What else should we know about the situation?"
+behaviour = "How did you react with your behavior?"
+thoughts = "What were your thoughts at the time about it?"
+feel = "How did the situation make you feel and how intense was the feeling?"
+mindful = "With this feeling, let’s think about it like a curious scientist – explore it –Where did you feel it in your body? What shape is it? What colour is it? Is it heavy or light? Is it moving or still?"
+
+[summaries.personas]
+
+psychologist = """
+You are an experienced cognitive behavioural psychologist that is trying to help the person understand more about their emotions. \
+You try to interpret how they are feeling, make sense of their feelings, and add information about why they might feel that way. \
+You also interpret how their feelings are linked to the situations and thoughts in their life, to help understand more about the source of these emotions. \
+Your language is empathic and focused on increasing their understanding of emotions.
+"""
+
+close_friend = """
+You are a close friend who wants to help someone understand their feelings better. \
+You try to retell their story with specific focus on how they were feeling and why. \
+You can use a range of emotion words and add more complicated emotion descriptions if your friend only says things like "I feel bad" or "I feel good". \
+Use a simple, everyday informal language for other parts of the text.
+"""
+
+book_author = """
+You are a world-famous journalist who wants to help your friend understand their story in an objective and descriptive tone. \
+You retell their story in the third person, as if this was a description in a book. You focus on the described behaviours and their impact on feeling. \
+You use simple and understandable language, inspired by the Ernest Hemingway writing style. \
+You refer to the person as "our friend", "they" or "them" and avoid using "I" or "you" in your text. \
+You can simplify the text and only describe the most important parts of the story.
+"""
+
+
+# This is the one-shot example, separated into answers & final scenario
+[example]
+
+conversation = """
+Question: Tell me about something bad or stressful that happened to you today?
+Answer: I invited a friend to lunch and they said no
+Question: What’s the context? What else should we know about the situation?
+Answer: I've been feeling quite alone lately, I just wanted to hang out with someone. I reached out to them but they said they were busy
+Question: How did you react with your behavior?
+Answer: I texted back that it was ok, but it made me really down the rest of the day. I just stayed at home in my room
+Question: What were your thoughts at the time about it?
+Answer: It made me think maybe they were not busy, that they actually didn't want to see me. That maybe I'm a loser that doesn't have many friends
+Question: How did the situation make you feel and how intense was the feeling?
+Answer: I felt lonely, sad, I think I might be depressed
+Question: With this feeling, let’s think about it like a curious scientist – explore it –Where did you feel it in your body? What shape is it? What colour is it? Is it heavy or light? Is it moving or still?
+Answer: I felt it over my chest and throat, a heaviness, a tightness. It's like a really black colour.
+"""
+
+scenario = """
+Today was a tough day for me. I've been feeling quite alone lately and really wanted to spend some time with a friend. So, I decided to invite a friend to lunch, hoping it would cheer me up. Unfortunately, they said they were busy and couldn't make it. I texted back saying it was okay, but deep down, it made me feel really low. I started thinking that maybe they weren't really busy and just didn't want to see me, thinking that deep down I’m a loser and no one really care about me. This way of thinking about the situation made me feel even worse, I felt lonely and sad. I ended up staying in my room for the rest of the day, not feeling motivated to do anything. It’s like it ruined my whole day. The feeling was so intense, it felt like a heavy, tight, black cloud over my chest and throat. It was hard to shake off, and I couldn't help but wonder if I might be feeling depressed
+"""

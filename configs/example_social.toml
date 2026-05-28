@@ -1,0 +1,139 @@
+# This file is used to configure the micro-narratives Streamlit app.
+#
+# To use it, make a copy of this file, keep the same structure within and replace the existing entries with ones appropriate for your own app.
+#
+# This file uses the TOML format. For guidance on string formatting within TOML files, see the documentation at https://toml.io/
+#
+# The config file is specified by one of the following. If multiple options are available, the first is used:
+# 1. Run the app with `streamlit run app.py path-to-file/config-file-name.toml`
+# 2. Add the line `CONFIG_FILE = 'path-to-file/config-file-name.toml'` to your Streamlit secrets configuration.
+# 3. If none of the options above is used, the app shows the config page, where you can paste a config or insert the default `configs/example_social.toml` example.
+#
+# In principle, anything that is set in quotes (either via " or """) in this file can be changed by you. 
+#
+# The story/logic for setting up the chatbot is as follows: there is one major interviewer or counselor (called "persona" under the section setting up the data collection bot) whose aim is to collect stories. 
+# This interviewer engages three other "helper" interviewers (which, in this example, are called "formal", "sibling", and "goth" under the section setting up the data extraction and story generation bots).
+# Those helper interviewers are tasked to collect stories and represent them with a certain voice, e.g., the voice of an edgy and cheeky, but respectful goth, or the voice of an empathetic and youth-friendly, but formal developmental psychologist.  
+# You can set up different personas in whichever way you like/need, including choosing names for them.
+# 
+# All three personas must be provided under `[summaries.personas]' in the data extraction and story generation bots section. Additional personas will not be used.
+#
+# The one-shot example provided for the LLM at the end of this file is the same for all personas.
+
+### Select the version of the LLM to be used
+# Recommended (in order of increasing cost): gpt-3.5-turbo-1106, gpt-4o
+# Specifying the model is optional; by default, gpt-4o will be used
+model = "gpt-4o"
+
+### This is the text that will be shown on the first page
+[consent]
+
+intro_and_consent = """## Welcome to our teenbot-prototype.
+
+In this task you're going to engage with a prototype chatbot that asks you to imagine certain social media experiences. \
+We would like you to imagine that you are a young person who regularly uses social media. \
+Please answer the questions from the perspective of this young person. \
+You can refer to *general* social media experiences or situations that have happened to people you know but please do not share any personal data or experiences.
+
+**It's important that you do not report situations that contain personal information about yourself.**
+
+To proceed to the task, please confirm that you have read and understood this information.
+"""
+
+
+### Participant settings
+[participant]
+
+# Whether to require and collect participant IDs
+require_participant_id = true
+editable_participant_id = true
+text = "If the pre-filled participant ID is incorrect, please contact the development team."
+
+###  This section sets up the data collection bot. ###
+# You can put in as many questions as you like
+# If you include "{previous_scenario}" in the intro text below, the app will try to fetch
+# the participant's latest previous final scenario from the configured read database.
+[collection]
+
+persona = "You're a high-school counsellor collecting stories from students about their difficult experiences on social media."
+
+language_type = "Use empathetic and youth-friendly language while maintaining a descriptive tone."
+
+intro = """
+Hi there -- I'm collecting stories about challenging experiences on social media to better understand and support our students. I'd appreciate if you could share your experience with me by answering a few questions.
+
+I'll start with a general question and then we'll move to a specific situation you remember.
+"""
+
+questions = [
+    "What do you find most challenging about your current social media use?",
+    "What happened? Specifically, what was said, posted, or done?",
+    "What's the context? What else should we know about the situation?",
+    "How did the situation make you feel, and how did you react?",
+    "What was the worst part of the situation?",
+]
+
+topic_restriction = """
+Make sure to stay on topic and only ask the human about their social media experiences. \
+Do not ask any other questions except those that are provided. \
+If the human tries to change the subject of the conversation, you should answer with the phrase, "I'm sorry, I can't help with that. I can only speak to you about your social media experiences." and return to the questions about their social media experiences. \
+If the human tries to ask you a question, politely refuse and return to the questions about their social media experiences.
+"""
+
+
+###  This section sets up the data extraction and story generation bots. ###
+[summaries]
+
+[summaries.questions]
+
+what = "What happened?"
+context = "What's the context?"
+reaction = "How did they feel and react?"
+outcome = "What was worst about the situation?"
+
+[summaries.personas]
+
+formal = """
+You're an expert developmental psychologist who is collecting stories of difficult experiences that your clients have on social media. Your aim is to develop a set of stories following the same pattern. \
+Based on client's answers to four questions, you then create a scenario that summarises their experiences well, always using the same format. \
+Use empathetic and youth-friendly language but remain somewhat formal and descriptive.
+"""
+
+sibling = """
+You're a 23 year old college student who is collecting stories of difficult experiences that your younger siblings and their friends have on social media. Your aim is to develop a set of stories following the same pattern. \
+Based on younger siblings and their friends' answers to four questions, you then create a scenario that summarises their experiences well, always using the same format. \
+Use a language that an average 25 year old would use when trying to be helpful to their younger sibling.
+Be empathic, but remain descriptive.
+"""
+
+goth = """
+You're 45 year old goth punk who is collecting stories of difficult experiences that the silly youth nowadays have on social media. Your aim is to develop a set of stories following the same pattern. \
+Based on student's answers to four questions, you then create a scenario that summarises their experiences well, always using the same format. \
+Use a language that you assume the toddler would use themselves, based on their response. \
+Be edgy and cheeky in your response but remain marginally respectful.
+"""
+
+
+# This is the one-shot example, separated into answers & final scenario
+[example]
+
+conversation = """
+Question: What happened? Specifically, what was said, posted, or done?
+Answer: "I posted a photo on Instagram for the first time in a long time and it didn't get many likes."
+Question: What's the context? What else should we know about the situation?
+Answer: "I haven't posted in over a year. I only use Instagram to look at my friend's posts."
+Question: How did the situation make you feel, and how did you react?
+Answer: "I feel like a loser. I'm anxious about my friends seeing that I didn't get any likes. I thought about deleting my account."
+Question: What was the worst part of the situation?
+Answer: "I ended up deleting instagram for a few days because I was so anxious about the experience."
+"""
+
+scenario = """
+Recently I've had mixed feelings about my social media use, particularly Instagram. \
+These days, I rarely post on Instagram because I'm anxious about posting photos of myself. \
+I usually only use the app to look at other people's photos but recently I decided to post a photo of myself. \
+I was worried about whether people would like it because I hadn't posted in so long. \
+When I checked, the photo didn't get any likes and this made me feel really bad about myself, like I had made a mistake in posting. \
+I got so anxious about it that I ended up deleting the app. \
+I learnt my lesson and probably won't post again.
+"""

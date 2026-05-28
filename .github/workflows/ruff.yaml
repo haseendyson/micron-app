@@ -1,0 +1,13 @@
+name: Run linting and formatting checks using Ruff
+
+on: pull_request
+
+jobs:
+
+  check-lint-and-format:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/ruff-action@v1
+        with:
+          args: check --output-format=github
