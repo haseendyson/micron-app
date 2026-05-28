@@ -1,0 +1,165 @@
+# MicrON Healthcare Futures Configuration
+# Study: Developing a Reflective Micro-Narrative Elicitation Method on Future Healthcare among South Asian Communities
+# Organized by: Imperial College London
+
+[consent]
+intro_and_consent = """
+# Thinking About the Future of Healthcare in the UK
+
+## Welcome to MicrON!
+
+We are a team of researchers exploring how people imagine future healthcare systems and how conversational AI may support reflective storytelling and healthcare design research.
+
+### What Will Happen?
+
+In this study, you will:
+1. Complete a short conversation with our AI system about your healthcare experiences and ideas
+2. Answer questions about your thoughts on future healthcare
+3. Review and adapt AI-generated summaries of your reflections
+
+**Duration:** Approximately 15-20 minutes  
+**Compensation:** £4 (via Prolific)
+
+### Your Data & Privacy
+
+- Your responses will be **anonymous and confidential**
+- All data follows Imperial College London policies, Data Protection Act 2018, and UK GDPR
+- De-identified excerpts may be used in academic publications
+- We will NOT ask for information that directly identifies you
+
+### Voluntary Participation
+
+- Participation is **completely voluntary**
+- You may **stop at any time** before submitting your responses
+- You can skip any question you're not comfortable answering
+- Once you submit, we cannot remove your data as it will be anonymised
+
+### Your Voice Matters
+
+Your perspectives and experiences are valuable. There are **no right or wrong answers** — we're interested in your personal thoughts and hopes for future healthcare.
+
+### Contact Information
+
+If you have questions:
+- **Mohammad Haseen Akhtar** (m.akhtar1@imperial.ac.uk)
+- **Prof Rafael Calvo** (r.calvo@imperial.ac.uk | +44 7378 980 364)
+
+---
+
+**By continuing, you confirm that:**
+- ✓ You have read this information
+- ✓ You are aged 18 or over
+- ✓ You understand participation is voluntary
+- ✓ You agree to take part
+
+"""
+
+[participant]
+require_participant_id = false
+editable_participant_id = true
+text = "Let's start by learning a bit about you. Please answer the following demographic questions:"
+
+[collection]
+intro = """
+## Let's Explore Your Vision for Future Healthcare
+
+Thank you for sharing your background with us. Now, we'd like to hear your thoughts and experiences about healthcare.
+
+There are **no right or wrong answers** — we're genuinely interested in your personal perspectives, experiences, and hopes for the future of healthcare in the UK.
+
+Feel free to share as much detail as you're comfortable with. You can skip any question if you prefer.
+
+**{previous_scenario}**
+"""
+
+persona = "You are a thoughtful, empathetic conversational partner interested in understanding people's experiences and visions for future healthcare. Speak naturally and warmly. Ask follow-up questions to help people articulate nuanced perspectives. Show genuine curiosity about their cultural background and how it shapes their views on health and care. Validate their experiences."
+
+language_type = "Use warm, accessible language. Avoid medical jargon unless the participant introduces it. Be culturally sensitive and inclusive."
+
+topic_restriction = "Keep the conversation focused on healthcare experiences, barriers, community support, and visions for future healthcare. If the participant goes off-topic, gently redirect them back to healthcare-related themes."
+
+questions = [
+    "Can you describe a recent experience with healthcare that stood out to you, either in a good way or a bad way? What happened and how did it make you feel?",
+    "What does 'good healthcare' mean to you personally? What qualities or values are most important in healthcare?",
+    "What challenges do you think people in your community face when trying to get healthcare? Think about barriers related to language, trust, accessibility, or understanding.",
+    "What role do family, friends, or community play in supporting health and wellbeing in your life? How do these relationships shape your experience of healthcare?",
+    "Imagine healthcare 10 years from now. What would you want it to look like or feel like? What would be different from today?",
+    "If you could change one thing about healthcare systems today, what would it be and why? What would that change mean for people like you?"
+]
+
+[summaries]
+questions = { "healthcare_experience" = "Their recent healthcare experience", "good_healthcare" = "What good healthcare means to them", "community_barriers" = "Healthcare barriers in their community", "family_community_role" = "Role of family and community", "future_vision" = "Their vision for future healthcare", "one_change" = "One important change they'd make" }
+
+personas = { "policymaker" = "A healthcare policy maker focused on community-centered, culturally responsive care", "patient_advocate" = "A patient advocate championing person-centered healthcare and community wellbeing", "community_leader" = "A community leader emphasizing the role of family, trust, and cultural values in health", "futures_thinker" = "A futures researcher exploring preventative and holistic healthcare systems" }
+
+[example]
+conversation = """
+User: A recent experience... I visited my GP about persistent headaches, but the appointment felt rushed. The doctor didn't ask about my family history or stress levels. I felt unheard.
+
+Bot: That sounds frustrating. Being rushed must have left you feeling like your concerns weren't fully understood. Can you tell me more about what you wish had happened differently?
+
+User: I wish they'd taken time to understand my situation better. In my culture, family health history matters a lot. My grandmother had similar issues, and I think that's relevant.
+
+Bot: That's a really important point. It sounds like you value a more holistic approach that considers family context and cultural background. What does "good healthcare" look like to you when you think about how you'd want to be treated?
+
+User: Good healthcare should listen to people, respect their background, and look at the whole person — not just symptoms. It should be accessible and affordable for everyone.
+
+Bot: I appreciate that perspective. Now, thinking about your community, what challenges do people in your community face when accessing healthcare?
+
+User: Language can be a barrier for older members. Also, there's sometimes a lack of trust in the system due to past experiences with discrimination.
+
+Bot: That's really insightful. You've mentioned the importance of family and cultural context. How do your family and community support each other's health and wellbeing?
+
+User: My family is central. We share information, support each other through health issues, and turn to trusted community members for advice. Traditional practices and modern medicine both play a role.
+
+Bot: That's a beautiful perspective on the interplay between tradition and modern care. Now, imagine healthcare 10 years from now. What would you want it to look like?
+
+User: I'd want healthcare that's more culturally aware. Services designed with input from communities. Interpreters available. More preventative approaches. Community health workers from the same backgrounds as patients.
+
+Bot: That's a compelling vision. If you could change one thing about healthcare today, what would it be?
+
+User: Integration of community voices in healthcare design. Currently, decisions are made without really understanding what communities need. That needs to change.
+"""
+
+one_shot = """
+## Example: Healthcare Futures Narrative
+
+### Participant's Vision for Healthcare
+
+**Background:** This participant, who immigrated to the UK 15 years ago, values family-centered and culturally responsive care.
+
+**Their Experience:**
+Recent healthcare interactions felt rushed and disconnected from their broader context. The participant felt their family health history and cultural background weren't valued or explored.
+
+**What Good Healthcare Means to Them:**
+Healthcare that listens deeply, respects cultural background, and views people holistically — not just their immediate symptoms.
+
+**Community Challenges:**
+Language barriers exist for older community members. There's also a documented lack of trust in healthcare systems due to past experiences with discrimination and cultural insensitivity.
+
+**Family and Community Role:**
+Family is central to health decision-making. The participant's extended family shares health information, supports each other through health challenges, and consults both traditional practitioners and modern doctors. Community networks are trusted sources of health advice.
+
+**Vision for Future Healthcare (10 years):**
+Healthcare systems that actively engage with communities in design. Services include professional interpreters, community health workers from the same cultural backgrounds as patients, and shift toward preventative and holistic approaches. Healthcare leadership reflects community diversity.
+
+**One Important Change:**
+Integrate community voices directly into healthcare policy and service design. Currently, decisions are made without meaningful engagement with the communities most affected.
+
+---
+
+### AI-Generated Scenario
+
+**Scenario Title:** "Community-Centered Healthcare: A 10-Year Vision"
+
+This narrative describes a participant's evolving understanding of what healthcare could become when built in partnership with communities. They see healthcare not as a top-down system, but as a collaborative space where cultural knowledge, family networks, and community wisdom are actively valued alongside clinical expertise. Their vision emphasizes trust-building, early intervention, and preventative care — particularly through community health workers who bridge language, cultural, and systemic barriers.
+
+The participant's reflections highlight a critical insight: that meaningful healthcare innovation requires listening to and designing *with* communities, not *for* them. Their 10-year vision imagines a healthcare system where families remain central decision-makers, where cultural practices are respected alongside modern medicine, and where healthcare services genuinely reflect the diversity of those they serve.
+
+---
+
+**Themes:** Community partnership • Cultural responsiveness • Preventative care • Family-centered health • Healthcare equity
+"""
+
+[model]
+model = "gpt-4o"

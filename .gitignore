@@ -4,9 +4,10 @@ secrets*
 *.zip
 .platform
 
-# Track example configs but not others that users may create
+# Track example configs and MicrON config but not others that users may create
 configs/*.toml
 !configs/example*.toml
+!configs/micron*.toml
 
 # --- Standard Python .gitignore ---
 
