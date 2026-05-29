@@ -159,5 +159,4 @@ The participant's reflections highlight a critical insight: that meaningful heal
 **Themes:** Community partnership • Cultural responsiveness • Preventative care • Family-centered health • Healthcare equity
 """
 
-[model]
 model = "gpt-4o"
