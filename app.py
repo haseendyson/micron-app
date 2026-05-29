@@ -397,7 +397,7 @@ if __name__ == "__main__":
     initialiseStreamlitSessionState(llm_prompts, len(llm_prompts.personas))
     chat_model = ChatOpenAI(
         temperature=0.3,
-        model=llm_prompts.model_name,
+        model_name=llm_prompts.model_name,
         openai_api_key=os.environ["OPENAI_API_KEY"],
     )
 
