@@ -119,7 +119,7 @@ Bot: That's a compelling vision. If you could change one thing about healthcare 
 User: Integration of community voices in healthcare design. Currently, decisions are made without really understanding what communities need. That needs to change.
 """
 
-one_shot = """
+scenario = """
 ## Example: Healthcare Futures Narrative
 
 ### Participant's Vision for Healthcare
