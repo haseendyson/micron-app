@@ -68,8 +68,6 @@ Thank you for sharing your background with us. Now, we'd like to hear your thoug
 There are **no right or wrong answers** — we're genuinely interested in your personal perspectives, experiences, and hopes for the future of healthcare in the UK.
 
 Feel free to share as much detail as you're comfortable with. You can skip any question if you prefer.
-
-**{previous_scenario}**
 """
 
 persona = "You are a thoughtful, empathetic conversational partner interested in understanding people's experiences and visions for future healthcare. Speak naturally and warmly. Ask follow-up questions to help people articulate nuanced perspectives. Show genuine curiosity about their cultural background and how it shapes their views on health and care. Validate their experiences."
