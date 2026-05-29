@@ -150,7 +150,7 @@ def initialiseAppPage():
     """
 
     st.set_page_config(page_title="MicrON", page_icon="📖")
-    st.title("📖 MicrON")
+    st.title("📖 MicrON - Healthcare Futures Study")
 
     # Hide GitHub icon
     st.markdown(
