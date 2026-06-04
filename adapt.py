@@ -4,6 +4,24 @@ from langchain.output_parsers.json import SimpleJsonOutputParser
 logger = st.logger.get_logger("micronarratives")
 
 
+def _coerce_to_str(value) -> str:
+    """
+    Safely convert any scenario value to a plain string.
+    Guards against None or dict values reaching st.text_area, which requires str.
+    """
+    if value is None:
+        return ""
+    if isinstance(value, str):
+        return value
+    # Fallback: should not happen after scenario.py's _scenario_to_text fix,
+    # but belt-and-braces for any pre-existing session state.
+    import json
+    try:
+        return json.dumps(value, indent=2, ensure_ascii=False)
+    except (TypeError, ValueError):
+        return str(value)
+
+
 def adapt_scenario(chat_model, adaptation_prompt_template):
     """
     Prepare the final version of the selected scenario.
@@ -13,14 +31,31 @@ def adapt_scenario(chat_model, adaptation_prompt_template):
     - optional AI-assisted adaptation
     - explicit accept/reject/reset controls
     """
-
+    # FIX: coerce both session state values to str before any widget reads
+    # them. Without this, if final_scenario or final_scenario_editor were
+    # set to a dict (from the old code path), st.text_area raises:
+    #   TypeError: text_area_proto.value = widget_state.value  (StringValue)
     if not st.session_state["final_scenario"]:
-        st.session_state["final_scenario"] = st.session_state["generated_scenarios"][
+        raw = st.session_state["generated_scenarios"][
             st.session_state["selected_scenario_index"]
         ]
+        st.session_state["final_scenario"] = _coerce_to_str(raw)
 
     if not st.session_state["final_scenario_editor"]:
-        st.session_state["final_scenario_editor"] = st.session_state["final_scenario"]
+        st.session_state["final_scenario_editor"] = _coerce_to_str(
+            st.session_state["final_scenario"]
+        )
+
+    # Belt-and-braces: even if the values were already set, ensure they are str.
+    # This catches any legacy session state from before the scenario.py fix.
+    if not isinstance(st.session_state["final_scenario"], str):
+        st.session_state["final_scenario"] = _coerce_to_str(
+            st.session_state["final_scenario"]
+        )
+    if not isinstance(st.session_state["final_scenario_editor"], str):
+        st.session_state["final_scenario_editor"] = _coerce_to_str(
+            st.session_state["final_scenario_editor"]
+        )
 
     st.markdown(
         "It seems that you selected a story that you liked. "
@@ -62,7 +97,6 @@ def adapt_scenario(chat_model, adaptation_prompt_template):
 
 def display_adaptation_page(chat_model, adaptation_prompt_template):
     """Render the adaptation chat flow."""
-
     messages = st.session_state["adapt_messages"]
 
     if not messages:
@@ -104,8 +138,11 @@ def display_adaptation_page(chat_model, adaptation_prompt_template):
 
 def get_feedback(container, updated_scenario):
     """Display feedback controls for an AI-generated adaptation."""
-
     del container
+
+    # FIX: coerce to str before rendering — adapted_scenario should already
+    # be a str from update_scenario(), but guard against edge cases.
+    updated_scenario = _coerce_to_str(updated_scenario)
 
     st.chat_message("ai").markdown(
         f"Here is the adaptation:\n\n"
@@ -133,7 +170,6 @@ def get_feedback(container, updated_scenario):
 
 def update_scenario(chat_model, adaptation_prompt_template, chat_input):
     """Use the chat model to apply an update to the current scenario."""
-
     chain = adaptation_prompt_template | chat_model | SimpleJsonOutputParser()
 
     try:
@@ -157,15 +193,18 @@ def update_scenario(chat_model, adaptation_prompt_template, chat_input):
             "Please try again with different wording."
         )
 
-    return new_response["new_scenario"]
+    # FIX: coerce the returned value to str — new_scenario could itself be a
+    # nested dict if the LLM wraps its output unexpectedly.
+    return _coerce_to_str(new_response["new_scenario"])
 
 
 def resetFinalScenario():
     """Reset the draft back to the original selected scenario."""
-
-    original = st.session_state["generated_scenarios"][
-        st.session_state["selected_scenario_index"]
-    ]
+    original = _coerce_to_str(
+        st.session_state["generated_scenarios"][
+            st.session_state["selected_scenario_index"]
+        ]
+    )
     st.session_state["final_scenario"] = original
     st.session_state["final_scenario_editor"] = original
     st.session_state["adapt_messages"] = []
@@ -176,7 +215,7 @@ def resetFinalScenario():
 
 def iterateFinalScenario(new_scenario):
     """Compatibility wrapper for the older adapt flow."""
-
+    new_scenario = _coerce_to_str(new_scenario)
     st.session_state["final_scenario"] = new_scenario
     st.session_state["final_scenario_editor"] = new_scenario
     st.session_state["adapted_scenario"] = ""
@@ -187,14 +226,13 @@ def iterateFinalScenario(new_scenario):
 
 def confirmCurrentScenario():
     """Accept the manually edited scenario as final."""
-
     st.session_state["final_scenario"] = st.session_state["final_scenario_editor"]
     st.session_state["agentState"] = "save"
 
 
 def confirmFinalScenario(new_scenario):
     """Accept an AI-generated adaptation as final."""
-
+    new_scenario = _coerce_to_str(new_scenario)
     st.session_state["final_scenario"] = new_scenario
     st.session_state["final_scenario_editor"] = new_scenario
     st.session_state["adapted_scenario"] = ""
@@ -205,7 +243,6 @@ def confirmFinalScenario(new_scenario):
 
 def rejectAdaptation():
     """Discard the current AI-generated adaptation and reopen the chat."""
-
     st.session_state["adapted_scenario"] = ""
     st.session_state["adapt_messages"] = []
     st.session_state["pending_adapt_input"] = ""
