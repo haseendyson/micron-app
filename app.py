@@ -155,9 +155,8 @@ def initialiseAppPage():
     """
     Initialise the Streamlit app's page.
     """
-    st.set_page_config(page_title="MicrON", page_icon="📖")
-    st.title("📖 MicrON - Healthcare Futures Study")
-    _display_materials_sidebar()
+    st.set_page_config(page_title="Thinking About the Future of Healthcare in the UK", page_icon="📖")
+    st.title("Thinking About the Future of Healthcare in the UK")
 
     # Hide GitHub icon
     st.markdown(
@@ -168,35 +167,6 @@ def initialiseAppPage():
         """,
         unsafe_allow_html=True,
     )
-
-
-def _display_materials_sidebar():
-    """Show attached materials from the `materials` folder in the sidebar."""
-    materials_dir = Path(__file__).resolve().parent / "materials"
-    if not materials_dir.exists() or not materials_dir.is_dir():
-        return
-
-    material_files = sorted(materials_dir.glob("*"))
-    if not material_files:
-        return
-
-    st.sidebar.header("Attached materials")
-    st.sidebar.write("Download the attached study materials below:")
-
-    for material_file in material_files:
-        try:
-            file_bytes = material_file.read_bytes()
-        except OSError:
-            st.sidebar.warning(f"Unable to read {material_file.name}")
-            continue
-
-        st.sidebar.download_button(
-            label=f"Download {material_file.name}",
-            data=file_bytes,
-            file_name=material_file.name,
-            mime="application/octet-stream",
-            key=f"download_{material_file.name}",
-        )
 
 
 def initialiseStreamlitSessionState(llm_prompts, num_scenarios):
