@@ -1,3 +1,5 @@
+import json
+
 import streamlit as st
 
 import save
@@ -20,10 +22,10 @@ def confirm_final_scenario(message_history, table):
         save.save_session_data(package, table)
 
     st.session_state["final_scenario_editor"] = st.session_state["final_scenario"]
-    display_completion_page()
+    display_completion_page(package)
 
 
-def display_completion_page():
+def display_completion_page(package):
     """
     Displays the final scenario to the user.
     """
@@ -34,3 +36,11 @@ def display_completion_page():
         "you liked! "
     )
     st.markdown(f":green[{st.session_state['final_scenario']}]")
+
+    package_json = json.dumps(package, indent=2, ensure_ascii=False)
+    st.download_button(
+        "Download interaction history as JSON",
+        package_json,
+        file_name="micron_interaction_history.json",
+        mime="application/json",
+    )

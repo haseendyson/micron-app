@@ -56,6 +56,7 @@ def summarise_session_data(message_history):
             else ""
         ),
         "completion_time": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        "language_level": st.session_state.get("language_level", ""),
         "initial_scenario": initial_scenario,
         "initial_scenario_review_score": st.session_state.get(
             "selected_scenario_review"
@@ -63,7 +64,10 @@ def summarise_session_data(message_history):
         "final_scenario": st.session_state["final_scenario"],
         "summary_answers": st.session_state["summary_answers"],
         "scenarios": scenarios_with_feedback,
-        "chat_history": [(m.type, m.content) for m in message_history.messages],
+        "chat_history": [
+            {"role": m.type, "message": m.content}
+            for m in message_history.messages
+        ],
         "chat_history_single_string": str(message_history),
     }
 
