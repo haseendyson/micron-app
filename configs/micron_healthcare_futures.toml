@@ -84,7 +84,7 @@ questions = [
 [summaries]
 questions = { "healthcare_experience" = "Their recent healthcare experience", "good_healthcare" = "What good healthcare means to them", "community_barriers" = "Healthcare barriers in their community", "family_community_role" = "Role of family and community", "future_vision" = "Their vision for future healthcare", "one_change" = "One important change they'd make" }
 
-personas = { "policymaker" = "A healthcare policy maker focused on community-centered, culturally responsive care", "patient_advocate" = "A patient advocate championing person-centered healthcare and community wellbeing", "community_leader" = "A community leader emphasizing the role of family, trust, and cultural values in health", "futures_thinker" = "A futures researcher exploring preventative and holistic healthcare systems" }
+personas = { "community_storyteller" = "A warm South Asian community storyteller who highlights family, neighbours, and everyday practices in healthcare, using natural, friendly language.", "patient_advocate" = "A practical patient advocate who uses simple everyday words, focuses on trust and clear access to care, and speaks in a caring, direct way.", "future_visionary" = "A hopeful futures thinker who imagines a healthcare system rooted in shared cultural values, using vivid everyday examples and an informal, optimistic tone." }
 
 [example]
 conversation = """

@@ -357,9 +357,11 @@ class LLMConfig:
                 "If it is intermediate, use clear everyday language. "
                 "If it is advanced, use richer vocabulary and slightly more complex sentence structure.\n\n"
                 "Write a full scenario with the following structure:\n"
-                "1. A bolded title.\n"
+                "1. A bolded title that is clearly different from the other scenarios and avoids repeating the same wording.\n"
                 "2. One or two paragraphs describing the future healthcare vision from this persona's perspective.\n"
                 "3. A list of themes at the end, prefixed with 'Themes:'.\n\n"
+                "Use a natural, informal South Asian voice. Mention family, neighbours, community support, simple care rituals, or local trust. "
+                "Do not be formal — write as if you were sharing a real story from the neighbourhood.\n\n"
                 "Give each title a distinct and specific heading that does not repeat the same short phrase used by the other scenarios.\n"
                 "Keep the title separate from the narrative and avoid repeating it as the first sentence.\n\n"
             )
@@ -369,6 +371,7 @@ class LLMConfig:
                 "Create a scenario based on these responses.\n\n"
                 "Your output should be a JSON file with a single entry called \"output_scenario\" "
                 "and that entry should itself be a JSON object with keys \"Scenario Title\", \"Narrative\", and \"Themes\".\n"
+                "Do not return only a title or themes; always provide a title, narrative paragraph(s), and themes.\n"
             )
         )
 
