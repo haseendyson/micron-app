@@ -100,7 +100,9 @@ def generate_scenarios(llm_prompts, chat_model, summary_answers, bar):
     )
 
     def generate_single(persona):
-        response = scenario_chain.invoke({"persona": persona} | summary_answers)
+        response = scenario_chain.invoke(
+            {"persona": persona, "language_level": st.session_state.get("language_level", "intermediate")} | summary_answers
+        )
         if not isinstance(response, dict) or "output_scenario" not in response:
             raise ValueError(f"Unexpected response format: {response}")
         # FIX: convert the raw output_scenario value (which may itself be a

@@ -214,6 +214,7 @@ def initialiseStreamlitSessionState(llm_prompts, num_scenarios):
         # here and then unconditionally overwriting it in __main__ on every
         # re-run defeated the session-state guard above.
         "previous_scenario": None,
+        "language_level": "",
         "summary_answers": {},
         "generated_scenarios": [""] * num_scenarios,
         "scenario_feedback": [None] * num_scenarios,

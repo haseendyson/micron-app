@@ -72,12 +72,53 @@ def conduct_q_and_a(
                 st.chat_message("ai").write(response["response"])
 
     if st.session_state.get("is_processing"):
+        if not st.session_state.get("language_level"):
+            st.session_state["language_level"] = detect_language_level(
+                chat_model, message_history
+            )
         _process_completed_conversation(
             llm_prompts,
             chat_model,
             message_history,
             extraction_chain,
         )
+
+
+def detect_language_level(chat_model, message_history):
+    """Infer the participant's preferred language level from their responses."""
+    user_messages = [
+        msg.content
+        for msg in message_history.messages
+        if getattr(msg, "type", None) == "human"
+    ]
+    if not user_messages:
+        return "intermediate"
+
+    user_text = "\n\n".join(user_messages[-5:])
+    prompt = (
+        "You are a helpful assistant that classifies how a person writes. "
+        "Read the user's responses below and choose one of these language levels:\n"
+        "- basic: short simple sentences and everyday words\n"
+        "- intermediate: clear language with moderate vocabulary and sentence length\n"
+        "- advanced: richer vocabulary and more complex sentences\n\n"
+        "Return exactly one word: basic, intermediate, or advanced."
+        "\n\nUser text:\n"
+        f"{user_text}"
+    )
+
+    try:
+        result = chat_model.predict(prompt)
+    except Exception:
+        return "intermediate"
+
+    normalized = result.strip().lower()
+    if "basic" in normalized:
+        return "basic"
+    if "advanced" in normalized:
+        return "advanced"
+    if "intermediate" in normalized:
+        return "intermediate"
+    return "intermediate"
 
 
 def _process_completed_conversation(

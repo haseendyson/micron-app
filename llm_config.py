@@ -142,8 +142,10 @@ class LLMConfig:
             "{persona}\n\n"
             "Your goal is to gather structured answers to the following questions:\n\n"
             "{questions}\n"
-            "Ask each question one at a time.\n"
-            "{language_type}\n"
+            "Ask each question one at a time. Do not include question numbers or list formatting when you ask the next question.\n"
+            "Ask each question as a natural conversational sentence.\n"            "Do not ask more than one question in a single response.\n"
+            "If the human's answer is incomplete or unclear, ask a follow-up clarification question instead of moving on to the next main question.\n"
+            "If the human has already answered the current question, then ask only the next question.\n"            "{language_type}\n"
             "Ensure you get at least a basic answer to each question before moving to "
             "the next.\n"
             "Never answer for the human. "
@@ -175,17 +177,17 @@ class LLMConfig:
 
     def _generate_question_list(self, questions):
         """
-        Creates an enumerated list of questions to be asked by the LLM, based on a list
-        of questions.
+        Creates a list of questions to be shown to the LLM, based on a list of
+        questions.
         Args:
             questions (list[str]): a list of questions that the LLM should ask
         Returns:
-            str: numbered questions, one per line
+            str: bullet-formatted questions, one per line
         """
 
         question_list = ""
-        for count, question in enumerate(questions):
-            question_list += f"{count + 1}. {question}\n"
+        for question in questions:
+            question_list += f"- {question}\n"
 
         return question_list
 
@@ -294,7 +296,11 @@ class LLMConfig:
 
         prompt_adaptation_template = PromptTemplate.from_template(
             "You're a helpful assistant, helping students adapt a scenario to their "
-            "liking. The original scenario this student came with:\n\n"
+            "liking. Use the participant's language level: {language_level}. "
+            "If the level is basic, keep the adaptation short and easy to understand. "
+            "If it is intermediate, use clear everyday language. "
+            "If it is advanced, use richer vocabulary and slightly more complex sentence structure.\n\n"
+            "The original scenario this student came with:\n\n"
             "Scenario: {scenario}.\n\n"
             "Their current request is {input}.\n\n"
             "Suggest an alternative version of the scenario. "
@@ -344,6 +350,10 @@ class LLMConfig:
                 "{persona}\n\n"
                 "{one_shot}\n\n"
                 "Your task:\nCreate a scenario based on the following answers:\n\n"
+                "Use the participant's language level: {language_level}. "
+                "If the level is basic, keep the scenario short and easy to understand. "
+                "If it is intermediate, use clear everyday language. "
+                "If it is advanced, use richer vocabulary and slightly more complex sentence structure.\n\n"
             )
             + self._generate_q_and_a(questions)
             + (
@@ -356,7 +366,7 @@ class LLMConfig:
 
         scenario_prompt_template = PromptTemplate(
             template=scenario_prompt_template_text,
-            input_variables=["persona"] + list(questions.keys()),
+            input_variables=["persona", "language_level"] + list(questions.keys()),
             partial_variables={
                 "one_shot": self.one_shot,
             },

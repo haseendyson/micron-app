@@ -177,6 +177,7 @@ def update_scenario(chat_model, adaptation_prompt_template, chat_input):
             {
                 "scenario": st.session_state["final_scenario_editor"],
                 "input": chat_input,
+                "language_level": st.session_state.get("language_level", "intermediate"),
             }
         )
     except Exception as exc:
