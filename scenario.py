@@ -158,6 +158,7 @@ def generate_scenarios_with_progress(
         )
         bar = st.progress(0, text="Processing your scenarios")
         scenarios = generate_scenarios(llm_prompts, chat_model, summary_answers, bar)
+        scenarios = scenarios[:3]
         st.session_state["generated_scenarios"] = scenarios
 
     st.session_state["langsmith_run_id"] = None

@@ -86,6 +86,7 @@ def review_scenarios(langsmith_enabled=False, smith_client=None, one_shot=""):
         "Then pick the one that you like the most to continue."
     )
 
+    scenarios = scenarios[:3]
     for index, scenario_data in enumerate(scenarios):
         _display_scenario_card(
             index,
