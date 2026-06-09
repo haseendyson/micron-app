@@ -360,6 +360,8 @@ class LLMConfig:
                 "1. A bolded title.\n"
                 "2. One or two paragraphs describing the future healthcare vision from this persona's perspective.\n"
                 "3. A list of themes at the end, prefixed with 'Themes:'.\n\n"
+                "Give each title a distinct and specific heading that does not repeat the same short phrase used by the other scenarios.\n"
+                "Keep the title separate from the narrative and avoid repeating it as the first sentence.\n\n"
             )
             + self._generate_q_and_a(questions)
             + (

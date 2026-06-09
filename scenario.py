@@ -95,6 +95,7 @@ def generate_scenarios(llm_prompts, chat_model, summary_answers, bar):
     Generates the scenarios from the user's summary answers, in the style of each of the
     personas. As scenarios are generated, updates the progress bar.
     """
+    personas = llm_prompts.personas[:3]
     scenario_chain = (
         llm_prompts.scenario_prompt_template | chat_model | SimpleJsonOutputParser()
     )
@@ -111,13 +112,13 @@ def generate_scenarios(llm_prompts, chat_model, summary_answers, bar):
         # a str and never a dict.
         return _scenario_to_text(response["output_scenario"])
 
-    scenarios = [None] * len(llm_prompts.personas)
+    scenarios = [None] * len(personas)
     completed = 0
 
-    with ThreadPoolExecutor(max_workers=min(3, len(llm_prompts.personas))) as executor:
+    with ThreadPoolExecutor(max_workers=min(3, len(personas))) as executor:
         future_to_index = {
             executor.submit(generate_single, persona): index
-            for index, persona in enumerate(llm_prompts.personas)
+            for index, persona in enumerate(personas)
         }
 
         for future in as_completed(future_to_index):
@@ -132,8 +133,8 @@ def generate_scenarios(llm_prompts, chat_model, summary_answers, bar):
 
             completed += 1
             bar.progress(
-                completed / len(llm_prompts.personas),
-                f"Processed scenario {completed} of {len(llm_prompts.personas)}",
+                completed / len(personas),
+                f"Processed scenario {completed} of {len(personas)}",
             )
 
     return scenarios
