@@ -97,6 +97,8 @@ class LLMConfig:
             persona.strip()
             for persona in list(config["summaries"]["personas"].values())
         ]
+        if len(self.personas) > 3:
+            self.personas = self.personas[:3]
         self.one_shot = self.generate_one_shot(config["example"])
         self.one_shot_conversation = config["example"]["conversation"].strip()
         self.scenario_prompt_template = self.generate_scenario_prompt_template(
@@ -349,18 +351,22 @@ class LLMConfig:
             (
                 "{persona}\n\n"
                 "{one_shot}\n\n"
-                "Your task:\nCreate a scenario based on the following answers:\n\n"
+                "Your task:\nCreate one complete scenario based on the following answers:\n\n"
                 "Use the participant's language level: {language_level}. "
                 "If the level is basic, keep the scenario short and easy to understand. "
                 "If it is intermediate, use clear everyday language. "
                 "If it is advanced, use richer vocabulary and slightly more complex sentence structure.\n\n"
+                "Write a full scenario with the following structure:\n"
+                "1. A bolded title.\n"
+                "2. One or two paragraphs describing the future healthcare vision from this persona's perspective.\n"
+                "3. A list of themes at the end, prefixed with 'Themes:'.\n\n"
             )
             + self._generate_q_and_a(questions)
             + (
                 "\n"
                 "Create a scenario based on these responses.\n\n"
-                "Your output should be a JSON file with a single entry called "
-                '"output_scenario".'
+                "Your output should be a JSON file with a single entry called \"output_scenario\" "
+                "and that entry should itself be a JSON object with keys \"Scenario Title\", \"Narrative\", and \"Themes\".\n"
             )
         )
 
