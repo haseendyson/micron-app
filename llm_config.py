@@ -351,18 +351,25 @@ class LLMConfig:
             (
                 "{persona}\n\n"
                 "{one_shot}\n\n"
-                "Your task:\nCreate one complete scenario based on the following answers:\n\n"
+                "Your task:\nCreate one complete future healthcare scenario based on the following answers:\n\n"
                 "Use the participant's language level: {language_level}. "
                 "If the level is basic, keep the scenario short and easy to understand. "
                 "If it is intermediate, use clear everyday language. "
                 "If it is advanced, use richer vocabulary and slightly more complex sentence structure.\n\n"
-                "Write a full scenario with the following structure:\n"
-                "1. A bolded title that is clearly different from the other scenarios and avoids repeating the same wording.\n"
-                "2. One or two paragraphs describing the future healthcare vision from this persona's perspective.\n"
-                "3. A list of themes at the end, prefixed with 'Themes:'.\n\n"
-                "Use a natural, informal South Asian voice. Mention family, neighbours, community support, simple care rituals, or local trust. "
+                "Write a full story for one person or family in a South Asian community in the UK. "
+                "Use an informal, neighbourhood voice with family, neighbours, community support, food, or local trust woven in. "
                 "Do not be formal — write as if you were sharing a real story from the neighbourhood.\n\n"
-                "Give each title a distinct and specific heading that does not repeat the same short phrase used by the other scenarios.\n"
+                "Use this structure exactly:\n"
+                "- Scenario Title: a clear, distinct title different from the other scenarios.\n"
+                "- Setting: where and when this future story happens.\n"
+                "- Actor: who is experiencing this healthcare journey.\n"
+                "- Challenge: what healthcare problem or need they face.\n"
+                "- Journey: what happens, step by step, including people, systems, and support.\n"
+                "- Outcome: how the situation improves and what value it creates.\n"
+                "- Narrative: a short, story-like paragraph or two that brings the future to life.\n"
+                "- Values: a short list of the human values that matter in this story.\n"
+                "- Themes: a short list of themes, separated by •.\n\n"
+                "Give each title a distinct heading and avoid repeating the exact same title phrase across scenarios.\n"
                 "Keep the title separate from the narrative and avoid repeating it as the first sentence.\n\n"
             )
             + self._generate_q_and_a(questions)
@@ -370,8 +377,8 @@ class LLMConfig:
                 "\n"
                 "Create a scenario based on these responses.\n\n"
                 "Your output should be a JSON file with a single entry called \"output_scenario\" "
-                "and that entry should itself be a JSON object with keys \"Scenario Title\", \"Narrative\", and \"Themes\".\n"
-                "Do not return only a title or themes; always provide a title, narrative paragraph(s), and themes.\n"
+                "and that entry should itself be a JSON object with keys \"Scenario Title\", \"Setting\", \"Actor\", \"Challenge\", \"Journey\", \"Outcome\", \"Narrative\", \"Values\", and \"Themes\".\n"
+                "Do not return only a title or themes; always provide a title, story narrative, and themes.\n"
             )
         )
 

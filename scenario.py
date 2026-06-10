@@ -52,9 +52,33 @@ def _scenario_to_text(scenario_data) -> str:
         narrative = ai_block.get("Narrative") or ai_block.get("narrative")
         if narrative:
             parts.append(narrative)
+        settings_text = ai_block.get("Setting") or ai_block.get("setting")
+        actor_text = ai_block.get("Actor") or ai_block.get("actor")
+        challenge_text = ai_block.get("Challenge") or ai_block.get("challenge")
+        journey_text = ai_block.get("Journey") or ai_block.get("journey")
+        outcome_text = ai_block.get("Outcome") or ai_block.get("outcome")
+        values_text = ai_block.get("Values") or ai_block.get("values")
         themes = ai_block.get("Themes") or ai_block.get("themes")
-        if themes:
-            parts.append(f"*Themes: {themes}*")
+        if narrative:
+            if values_text:
+                parts.append(f"*Values: {values_text}*")
+            if themes:
+                parts.append(f"*Themes: {themes}*")
+        else:
+            if settings_text:
+                parts.append(f"*Setting: {settings_text}*")
+            if actor_text:
+                parts.append(f"*Actor: {actor_text}*")
+            if challenge_text:
+                parts.append(f"*Challenge: {challenge_text}*")
+            if journey_text:
+                parts.append(f"*Journey: {journey_text}*")
+            if outcome_text:
+                parts.append(f"*Outcome: {outcome_text}*")
+            if values_text:
+                parts.append(f"*Values: {values_text}*")
+            if themes:
+                parts.append(f"*Themes: {themes}*")
 
     # Fallback: if there was no AI-Generated Scenario block, try common keys
     if len(parts) <= 1:
@@ -106,11 +130,18 @@ def generate_scenarios(llm_prompts, chat_model, summary_answers, bar):
         )
         if not isinstance(response, dict) or "output_scenario" not in response:
             raise ValueError(f"Unexpected response format: {response}")
-        # FIX: convert the raw output_scenario value (which may itself be a
-        # dict) to a clean plain-text string at generation time, so every
-        # downstream consumer (review, rate, adapt, finalise) always receives
-        # a str and never a dict.
-        return _scenario_to_text(response["output_scenario"])
+        scenario_object = response["output_scenario"]
+        if isinstance(scenario_object, str):
+            # Some models may return the JSON object as a string; attempt to parse it.
+            try:
+                import json
+
+                scenario_object = json.loads(scenario_object)
+            except Exception:
+                pass
+        if not isinstance(scenario_object, dict):
+            raise ValueError(f"Unexpected scenario object format: {scenario_object}")
+        return _scenario_to_text(scenario_object)
 
     scenarios = [None] * len(personas)
     completed = 0
